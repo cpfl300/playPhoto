@@ -107,3 +107,7 @@ input{
 	width: 40%;
 	margin: .5% 3%;
 }
+
+.none{
+	visibility: hidden;
+}

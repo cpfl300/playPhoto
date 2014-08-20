@@ -1,5 +1,6 @@
 window.addEventListener("load", function(){
 	userMedia.init();
+	aPicture.init();
 });
 
 var userMedia = {
@@ -67,6 +68,17 @@ var userMedia = {
 };
 
 var aPicture = {
+	init : function(){
+		this.openTextBox = document.querySelector('#openTextBox');
+		this.savePhoto = document.querySelector('#savePhoto');
+		this.addPhoto = document.querySelector('#addPhoto');
+
+		this.openTextBox.addEventListener('click', function(){
+			this.onOff(this.openTextBox);
+		}.bind(this));
+
+		this.savePhoto.addEventListener('click', this.saveAPhoto);
+	},
 	draw : function(){
 		var video = document.querySelector('video');
 		var canvas = document.querySelector("#canvas");
@@ -77,6 +89,22 @@ var aPicture = {
 		canvas.width = width;
 		canvas.height = height;
 		context.drawImage(video, 0, 0, width, height);
+	},
+	onOff : function(btn){
+		var textBox = document.querySelector('#textBox');
+		if(btn.textContent == "OpenTextBox"){
+			btn.textContent = "CloseTextBox";
+			textBox.classList.remove('none');
+		} else {
+			btn.textContent = "OpenTextBox";
+			textBox.classList.add('none');
+			
+		}
+	},
+	saveAPhoto : function(){
+		var canvas = document.querySelector('#canvas');
+		var dataURL = canvas.toDataURL('image/octet-stream');
+		window.location.href = dataURL;
 	}
 }
 
