@@ -72,12 +72,15 @@ var aPicture = {
 		this.openTextBox = document.querySelector('#openTextBox');
 		this.savePhoto = document.querySelector('#savePhoto');
 		this.addPhoto = document.querySelector('#addPhoto');
+		this.photoList = document.querySelector('#photoList');
 
 		this.openTextBox.addEventListener('click', function(){
 			this.onOff(this.openTextBox);
 		}.bind(this));
 
 		this.savePhoto.addEventListener('click', this.saveAPhoto);
+
+		this.addPhoto.addEventListener('click', this.addList.bind(this));
 	},
 	draw : function(){
 		var video = document.querySelector('video');
@@ -103,8 +106,29 @@ var aPicture = {
 	},
 	saveAPhoto : function(){
 		var canvas = document.querySelector('#canvas');
-		var dataURL = canvas.toDataURL('image/octet-stream');
+		var dataURL = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
 		window.location.href = dataURL;
+	},
+	addList : function(){
+		this.makeCanvas();
+		this.drawAtList();
+	},
+	makeCanvas : function(){
+		var miniCanvas = document.createElement('canvas');
+		miniCanvas.classList.add('miniPhoto'); 
+		this.photoList.insertAdjacentElement('afterbegin', miniCanvas);
+	},
+	drawAtList : function(){
+		var canvas = document.querySelector('#canvas');
+		var miniCanvas = this.photoList.firstElementChild;
+		var miniCWith = parseInt(window.getComputedStyle(miniCanvas).width);
+		var canvasWidth = parseInt(window.getComputedStyle(canvas).width);
+		var canvasHeight = parseInt(window.getComputedStyle(canvas).height);
+		var miniCHeight = miniCWith * canvasHeight / canvasWidth;
+		miniCanvas.style.height = miniCHeight +"px";
+
+		var context = miniCanvas.getContext("2d");
+		context.drawImage(canvas, 0, 0, 300, 150);
 	}
 }
 

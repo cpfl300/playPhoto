@@ -108,6 +108,11 @@ input{
 	margin: .5% 3%;
 }
 
+/*effect*/
 .none{
 	visibility: hidden;
+}
+.miniPhoto{
+	width: 100%;
+	margin-bottom: 3px;
 }
