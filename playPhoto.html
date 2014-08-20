@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title> play photo!</title>
+	<style>
+	body{
+		width: 100%;
+	}
+	#wrap{
+		width: 90%;
+		margin: auto;
+	}
+	
+	#right{
+		float: right;
+		display: inline-block;
+		width: 20%;
+		height: 600px;
+	}
+
+	#left{
+		display: inline-block;
+		width: 75%;
+		height: 600px;
+	}
+
+	#logo{
+		margin-top: 50px;
+		height: 50px;
+	}
+
+	#content{
+		height: 500px;
+	}
+
+	#cameraPart, #canvasPart{
+		display: inline-block;
+		width: 40%;
+		margin: 8% 4.5%;
+		float: left;
+	}
+
+	/*cameraPart*/
+	#video{
+		width: 100%;
+		border: 1px solid gray;
+	}
+
+	#cameraBtn{
+		margin-top: 10px;
+		height: 35px;
+	}
+
+	#cameraBtn button{
+		width: 30%;
+		margin: .5% 3%;
+	}
+
+	#cameraOff, #slidShow{
+		float: left;
+	}
+
+	#cameraTakePicture, #flipBook{
+		float: right;
+	}
+
+	/*canvasPart*/
+	#canvas{
+		width: 100%;
+		border: 1px solid gray;
+	}
+
+	#canvasBtn{
+		margin: 10px 0px;
+		height: 35px;
+	}
+
+	#canvasBtn button{
+		width: 25%;
+		margin: .5% 3.5%;
+	}
+
+	button, input{
+		border: 1px solid gray;
+		border-radius: 5px;
+		background-color: white;
+		height: 30px;
+	}
+
+	input{
+		width: 68%;
+		margin: 0 10px;
+		font-size: 15px;
+		padding-left: 4.7px;
+	}
+
+	#textBox{
+		margin-top: 30px;
+	}
+	/*right bar*/
+	#photoList{
+		height: 550px;
+		border: 1px solid gray;
+	}
+	#barBtn{
+		margin-top: 10px;
+		height: 35px;
+	}
+	#barBtn button{
+		width: 40%;
+		margin: .5% 3%;
+	}
+
+	</style>
+</head>
+<body>
+<section id="wrap">
+	<section id="left">
+		<section id="logo">
+			<h1 style="text-align: center;">Play Photo!</h1>
+		</section>
+		<section id="content">
+			<div id="cameraPart">
+				<video id="video" autoplay></video>
+				<div id="cameraBtn">
+					<button id="cameraOff">OFF</button>
+					<button id="cameraTakePicture">TakePicture</button>
+				</div>
+			</div>
+			<div id="canvasPart">
+				<canvas id="canvas"></canvas>
+				<div id="canvasBtn">
+					<button id="openTextBox">OpenTextBox</button>
+					<button id="savePhoto">SavePhoto</button>
+					<button id="addPhoto">AddPhoto</button>
+				</div>
+				<div id="textBox">
+					<input type="text">
+					<button id="addText">AddText</button>
+				</div>
+			</div>
+		</section>
+	</section>
+
+	<section id="right">
+		<div id="photoList">
+		</div>
+		<div id="barBtn">
+			<button id="slidShow">MakeSlidShow</button>
+			<button id="flipBook">MakeFlipBook</button>
+		</div>
+	</section>
+</section>
+</body>
+</html>
