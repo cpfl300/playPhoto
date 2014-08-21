@@ -107,7 +107,10 @@ var aPicture = {
 	saveAPhoto : function(){
 		var canvas = document.querySelector('#canvas');
 		var dataURL = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-		window.location.href = dataURL;
+		var aTag = document.createElement('a');
+		aTag.href = dataURL;
+		aTag.download = "myPhoto.png";
+		aTag.click();
 	},
 	addList : function(){
 		this.makeCanvas();
