@@ -116,3 +116,20 @@ input{
 	width: 100%;
 	margin-bottom: 3px;
 }
+
+input[type="checkbox"]{
+	position: absolute;
+	margin: -5px 0px;
+}
+
+span{
+	position: absolute;
+	right: 0px;
+	margin: 0px 5px;
+	color: red;
+	font-size: 18px;
+}
+
+span:hover{
+	cursor: pointer;
+}

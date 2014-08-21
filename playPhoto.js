@@ -83,6 +83,11 @@ var aPicture = {
 		this.addPhoto.addEventListener('click', this.addList.bind(this));
 	},
 	draw : function(){
+		var canvasPart = document.querySelector('#canvasPart');
+		if(canvasPart.classList.contains("none")){
+			canvasPart.classList.remove("none");
+		}
+
 		var video = document.querySelector('video');
 		var canvas = document.querySelector("#canvas");
 		context = canvas.getContext("2d");
@@ -115,15 +120,21 @@ var aPicture = {
 	addList : function(){
 		this.makeCanvas();
 		this.drawAtList();
+		this.addEventDel();
 	},
 	makeCanvas : function(){
-		var miniCanvas = document.createElement('canvas');
-		miniCanvas.classList.add('miniPhoto'); 
-		this.photoList.insertAdjacentElement('afterbegin', miniCanvas);
+		var miniDiv = document.createElement('div');
+		miniDiv.style.position="relative";
+		miniDiv.insertAdjacentHTML('afterbegin', this.template);
+		this.photoList.insertAdjacentElement('afterbegin', miniDiv);
 	},
+	template : "<input type=\"checkbox\">"
+		+"<span>x</span>"
+		+"<canvas class=\"miniPhoto\"></canvas>",
 	drawAtList : function(){
 		var canvas = document.querySelector('#canvas');
-		var miniCanvas = this.photoList.firstElementChild;
+		var div = this.photoList.firstElementChild;
+		var miniCanvas = div.querySelector('canvas');
 		var miniCWith = parseInt(window.getComputedStyle(miniCanvas).width);
 		var canvasWidth = parseInt(window.getComputedStyle(canvas).width);
 		var canvasHeight = parseInt(window.getComputedStyle(canvas).height);
@@ -132,6 +143,20 @@ var aPicture = {
 
 		var context = miniCanvas.getContext("2d");
 		context.drawImage(canvas, 0, 0, 300, 150);
+	},
+	addEventDel : function(){
+		var div = this.photoList.firstElementChild;
+		var delBtn = div.querySelector('span');
+		delBtn.addEventListener('click', photoList.delMiniCanvas);
 	}
 }
 
+var photoList={
+	init: function(){
+		//button event
+	},
+	delMiniCanvas : function(e){
+		var willDel = e.target.parentNode;
+		willDel.parentNode.removeChild(willDel);
+	}
+}
