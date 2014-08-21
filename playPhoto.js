@@ -83,9 +83,9 @@ var aPicture = {
 		this.addPhoto.addEventListener('click', this.addList.bind(this));
 	},
 	draw : function(){
-		var canvasPart = document.querySelector('#canvasPart');
-		if(canvasPart.classList.contains("none")){
-			canvasPart.classList.remove("none");
+		var btn = document.querySelector('#addPhoto');
+		if(btn.classList.contains("none")){
+			btn.classList.remove("none");
 		}
 
 		var video = document.querySelector('video');
