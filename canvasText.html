@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title> canvas test </title>
+		<style>
+			#can {
+				border: 1px solid black;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas id="can" width="400" height="300"></canvas>
+		<div id="textBox" class="none">
+			<input type="text">
+			<button id="addText">AddText</button>
+		</div>
+	<script>
+		var can = document.querySelector('#can'); //전역
+		var textList = [];
+
+		// mouse event
+
+		can.addEventListener('mousedown', mouseDown);
+		can.addEventListener('mousemove', mouseMove);
+		can.addEventListener('mouseup', mouseUp);
+
+		function mouseDown(e){
+			console.log("x: "+e.clientX + " y: " + e.clientY);
+			console.log("x: "+e.pageX + " y: " + e.pageY);
+		}
+
+		function mouseMove(e){
+			// console.log(e.pageY);
+		}
+
+		function mouseUp(e){
+			// console.log(e.pageY);
+		}
+
+		function drawText(text){
+			this.x = 0;
+			this.y = 130;
+			this.ctx = can.getContext('2d');
+			this.ctx.font = "130px Arial";
+			this.draw = function(){
+				this.ctx.fillText(text, this.x, this.y);	
+			}		
+		}
+
+		var addTxt = document.querySelector('#addText');
+		addTxt.addEventListener('click', insertText);
+
+		function insertText(){
+			var textValue = document.querySelector('#textBox input').value;
+			var text = new drawText(textValue);
+			text.draw();
+			textList.push(text);
+		}
+
+		function canvasRedraw(){
+			if(textList.length == 0) return;
+			textList[0].ctx.clearRect(0, 0, can.getAttribute('width'), can.getAttribute('height'));
+			textList.forEach(function(aText){ 
+				aText.draw();
+			});
+		}
+
+	</script>
+	</body>
+</html>
