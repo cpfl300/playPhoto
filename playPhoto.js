@@ -14,6 +14,10 @@ resource.shareElement = {
 	setShareParam : function(){
 		this.video = document.querySelector('video');	
 		this.canvas = document.querySelector('#canvas');
+	},
+	setVideoTagSize : function(){
+		this.videoWidth = parseInt(window.getComputedStyle(this.video).width);
+		this.videoHeight = parseInt(window.getComputedStyle(this.video).height);
 	}
 };
 resource.url = {
@@ -35,7 +39,7 @@ var userMedia = {
 		this.setShareParam();
 		this.cameraOn();
 		this.offBtn.addEventListener('click', function(){
-			this.onOff(this.offBtn);
+			this.cameraOnOff(this.offBtn);
 		}.bind(this));
 		this.takePicture.addEventListener('click', onePicture.draw);
 	},
@@ -85,7 +89,7 @@ var userMedia = {
 		this.stream.stop();
 	},
 
-	onOff: function(btn){
+	cameraOnOff: function(btn){
 		if(btn.textContent == "OFF"){
 			btn.textContent = "ON";
 			this.cameraOff();
@@ -101,7 +105,7 @@ var onePicture = {
 	init : function(){
 		this.setShareParam();
 		this.openTextBox.addEventListener('click', function(){
-			this.onOff(this.openTextBox);
+			this.textBoxOnOff(this.openTextBox);
 		}.bind(this));
 
 		this.savePhoto.addEventListener('click', this.saveAPhoto);
@@ -121,14 +125,13 @@ var onePicture = {
 		}
 
 		context = resource.shareElement.canvas.getContext("2d");
-		var width = parseInt(window.getComputedStyle(resource.shareElement.video).width);
-		var height = parseInt(window.getComputedStyle(resource.shareElement.video).height);
+		resource.shareElement.setVideoTagSize();
 
-		resource.shareElement.canvas.width = width;
-		resource.shareElement.canvas.height = height;
-		context.drawImage(video, 0, 0, width, height);
+		resource.shareElement.canvas.width = resource.shareElement.videoWidth;
+		resource.shareElement.canvas.height = resource.shareElement.videoHeight;
+		context.drawImage(video, 0, 0, resource.shareElement.videoWidth, resource.shareElement.videoHeight);
 	},
-	onOff : function(btn){
+	textBoxOnOff : function(btn){
 		var textBox = document.querySelector('#textBox');
 		if(btn.textContent == "OpenTextBox"){
 			btn.textContent = "CloseTextBox";
@@ -141,10 +144,10 @@ var onePicture = {
 	},
 	saveAPhoto : function(){
 		var dataURL = resource.shareElement.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
-		var aTag = document.createElement('a');
-		aTag.href = dataURL;
-		aTag.download = "myPhoto.png";
-		aTag.click();
+		var tempTag = document.createElement('a');
+		tempTag.href = dataURL;
+		tempTag.download = "myPhoto.png";
+		tempTag.click();
 	},
 	addList : function(){
 		this.makeCanvas();
@@ -153,21 +156,17 @@ var onePicture = {
 	},
 	makeCanvas : function(){
 		var miniDiv = document.createElement('div');
-		miniDiv.style.position="relative";
 		miniDiv.insertAdjacentHTML('afterbegin', resource.datas.template);
 		this.photoList.insertAdjacentElement('afterbegin', miniDiv);
+	},
+	getMiniCHeight: function(canvas){
+		var miniCWith = parseInt(window.getComputedStyle(canvas).width);
+		return miniCWith * resource.shareElement.videoHeight / resource.shareElement.videoWidth;
 	},
 	drawAtList : function(){
 		var div = this.photoList.firstElementChild;
 		var miniCanvas = div.querySelector('canvas');
-
-		var miniCWith = parseInt(window.getComputedStyle(miniCanvas).width);
-		var canvasWidth = parseInt(window.getComputedStyle(resource.shareElement.canvas).width);
-		var canvasHeight = parseInt(window.getComputedStyle(resource.shareElement.canvas).height);
-		var miniCHeight = miniCWith * canvasHeight / canvasWidth;
-
-		miniCanvas.style.height = miniCHeight +"px";
-
+		miniCanvas.style.height = this.getMiniCHeight(miniCanvas) +"px";
 		var context = miniCanvas.getContext("2d");
 		context.drawImage(resource.shareElement.canvas, 0, 0, 300, 150);
 	},

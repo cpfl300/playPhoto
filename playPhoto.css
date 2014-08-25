@@ -108,6 +108,9 @@ input{
 	margin: .5% 3%;
 }
 
+#photoList div{
+	position: relative;
+}
 /*effect*/
 .none{
 	visibility: hidden;
