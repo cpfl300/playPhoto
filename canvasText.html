@@ -5,6 +5,7 @@
 		<style>
 			#can {
 				border: 1px solid black;
+				margin-left: 500px;
 			}
 		</style>
 	</head>
@@ -15,20 +16,20 @@
 			<button id="addText">AddText</button>
 		</div>
 	<script>
-		var can = document.querySelector('#can'); //전역
+		var canvas = document.querySelector('#can'); //전역
 		var textList = [];
 		var choosed = null;
 		var mousePointX = null;
 		var mousePointY = null;
 		// mouse event
 
-		can.addEventListener('mousedown', mouseDown);
-		can.addEventListener('mousemove', mouseMove);
-		can.addEventListener('mouseup', mouseUp);
+		canvas.addEventListener('mousedown', mouseDown);
+		canvas.addEventListener('mousemove', mouseMove);
+		canvas.addEventListener('mouseup', mouseUp);
 
 		function mouseDown(e){
-			mousePointX = e.clientX - can.offsetLeft;
-			mousePointY = e.clientY - can.offsetTop;
+			mousePointX = e.clientX - canvas.offsetLeft;
+			mousePointY = e.clientY - canvas.offsetTop;
 
 			textList.forEach(function(el){
 				if(el.minX <= mousePointX && mousePointX <= el.maxX 
@@ -37,6 +38,8 @@
 					return;
 				}
 			});
+
+			test = requestAnimationFrame(canvasRedraw);
 		}
 
 		function mouseMove(e){
@@ -44,23 +47,25 @@
 				return;
 			}
 
-			var xMove = e.clientX - mousePointX;
-			var yMove = e.clientY - mousePointY;
-			mousePointX = e.clientX;
-			mousePointY = e.clientY;
+			var xMove = e.clientX - canvas.offsetLeft - mousePointX;
+			var yMove = e.clientY - canvas.offsetTop - mousePointY;
+			mousePointX = e.clientX - canvas.offsetLeft;
+			mousePointY = e.clientY - canvas.offsetTop;
+
 			choosed.x += xMove;
 			choosed.minX += xMove;
 			choosed.maxX += xMove;
 			choosed.y += yMove;
 			choosed.minY += yMove;
 			choosed.maxY += yMove;
-			canvasRedraw();
+			// canvasRedraw();
 		}
 
 		function mouseUp(e){
 			choosed = null;
 			mousePointX = null;
 			mousePointY = null;
+			cancelAnimationFrame(test);
 		}
 
 		function drawText(text){
@@ -68,7 +73,7 @@
 
 			this.x = 0;
 			this.y = 20 * 0.85;
-			this.ctx = can.getContext('2d');
+			this.ctx = canvas.getContext('2d');
 			this.ctx.font = "20px Arial";
 			this.minX = 0
 			this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
@@ -92,10 +97,11 @@
 
 		function canvasRedraw(){
 			if(textList.length == 0) return;
-			textList[0].ctx.clearRect(0, 0, can.getAttribute('width'), can.getAttribute('height'));
+			textList[0].ctx.clearRect(0, 0, canvas.getAttribute('width'), canvas.getAttribute('height'));
 			textList.forEach(function(aText){ 
 				aText.draw();
 			});
+			test = requestAnimationFrame(canvasRedraw);
 		}
 
 	</script>

@@ -2,6 +2,7 @@ window.addEventListener("load", function(){
 	resource.setResources();
 	userMedia.init();
 	onePicture.init();
+	onePicture.moveText.init();
 });
 
 var resource = {
@@ -9,8 +10,19 @@ var resource = {
 		this.shareElement.setShareParam();
 		this.url.setBasicResource();
 		this.datas.setBasicResource();
-}};
+	}
+};
 resource.shareElement = {
+	textList: [],
+
+	choosed: null,
+
+	mousePointX: null,
+
+	mousePointY: null,
+
+	latestImg: null,
+
 	setShareParam : function(){
 		this.video = document.querySelector('video');	
 		this.canvas = document.querySelector('#canvas');
@@ -25,7 +37,6 @@ resource.url = {
 		this.videoBasicResource = "http://www.w3schools.com/html/movie.mp4";
 	}
 }
-
 resource.datas = {
 	setBasicResource : function(){
 		this.template = "<input type=\"checkbox\">"
@@ -41,7 +52,7 @@ var userMedia = {
 		this.offBtn.addEventListener('click', function(){
 			this.cameraOnOff(this.offBtn);
 		}.bind(this));
-		this.takePicture.addEventListener('click', onePicture.draw);
+		this.takePicture.addEventListener('click', onePicture.draw.bind(onePicture));
 	},
 
 	setShareParam: function(){
@@ -119,9 +130,8 @@ var onePicture = {
 		this.photoList = document.querySelector('#photoList');
 	},
 	draw : function(){
-		var btn = document.querySelector('#addPhoto');
-		if(btn.classList.contains("none")){
-			btn.classList.remove("none");
+		if(this.addPhoto.classList.contains("none")){
+			this.addPhoto.classList.remove("none");
 		}
 
 		context = resource.shareElement.canvas.getContext("2d");
@@ -130,6 +140,10 @@ var onePicture = {
 		resource.shareElement.canvas.width = resource.shareElement.videoWidth;
 		resource.shareElement.canvas.height = resource.shareElement.videoHeight;
 		context.drawImage(video, 0, 0, resource.shareElement.videoWidth, resource.shareElement.videoHeight);
+		
+		var img = new Image();
+		img.src = resource.shareElement.canvas.toDataURL('image/png');
+		resource.shareElement.latestImg = img;
 	},
 	textBoxOnOff : function(btn){
 		var textBox = document.querySelector('#textBox');
@@ -153,6 +167,7 @@ var onePicture = {
 		this.makeCanvas();
 		this.drawAtList();
 		this.addEventDel();
+		resource.shareElement.textList.length = 0;
 	},
 	makeCanvas : function(){
 		var miniDiv = document.createElement('div');
@@ -176,6 +191,83 @@ var onePicture = {
 		delBtn.addEventListener('click', photoList.delMiniCanvas);
 	}
 }
+
+onePicture.moveText = {
+	init : function(){
+		resource.shareElement.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
+		resource.shareElement.canvas.addEventListener('mousemove', this.mouseMove.bind(this));
+		resource.shareElement.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+		var addTxt = document.querySelector('#addText');
+		addTxt.addEventListener('click', this.insertText.bind(this));
+	}, 
+	mouseDown : function(e){
+		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
+		resource.shareElement.mousePointY = e.clientY - resource.shareElement.canvas.offsetTop;
+
+		resource.shareElement.textList.forEach(function(el){
+			if(el.minX <= resource.shareElement.mousePointX && resource.shareElement.mousePointX <= el.maxX 
+				&& el.minY <= resource.shareElement.mousePointY && resource.shareElement.mousePointY <= el.maxY){
+				resource.shareElement.choosed = el;
+				return;
+			}
+		});
+
+		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
+	},
+	mouseMove : function(e){
+		if(resource.shareElement.choosed == null){
+			return;
+		}
+		var xMove = e.clientX - resource.shareElement.canvas.offsetLeft - resource.shareElement.mousePointX;
+		var yMove = e.clientY - resource.shareElement.canvas.offsetTop - resource.shareElement.mousePointY;
+		this.renewalChoosed(xMove, yMove);
+		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
+		resource.shareElement.mousePointY = e.clientY - resource.shareElement.canvas.offsetTop;
+	}, 
+	renewalChoosed : function(xM, yM){
+		resource.shareElement.choosed.x += xM;
+		resource.shareElement.choosed.minX += xM;
+		resource.shareElement.choosed.maxX += xM;
+		resource.shareElement.choosed.y += yM;
+		resource.shareElement.choosed.minY += yM;
+		resource.shareElement.choosed.maxY += yM;
+	},
+	canvasRedraw : function(){
+		if(resource.shareElement.textList.length == 0) return;
+		// resource.shareElement.textList[0].ctx.clearRect(0, 0, resource.shareElement.canvas.getAttribute('width'), resource.shareElement.canvas.getAttribute('height'));
+		resource.shareElement.textList[0].ctx.drawImage(resource.shareElement.latestImg, 0, 0, resource.shareElement.canvas.getAttribute('width'), resource.shareElement.canvas.getAttribute('height'));
+		resource.shareElement.textList.forEach(function(oneText){ 
+			oneText.draw();
+		});
+		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
+	},
+	mouseUp : function(e){
+		resource.shareElement.choosed = null;
+		resource.shareElement.mousePointX = null;
+		resource.shareElement.mousePointY = null;
+		cancelAnimationFrame(this.forDraw);
+	},
+	drawText: function(text){
+		this.x = 0;
+		this.y = 20 * 0.85;
+		this.ctx = canvas.getContext('2d');
+		this.ctx.font = "20px Arial";
+		this.minX = 0
+		this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
+		this.minY = 0;
+		this.maxY = this.minY + parseInt(this.ctx.font);
+		this.draw = function(){
+			this.ctx.fillText(text, this.x, this.y);	
+		}		
+	},
+	insertText : function(){
+		var elText = document.querySelector('#textBox input');
+		var text = new this.drawText(elText.value);
+		text.draw();
+		resource.shareElement.textList.push(text);
+		elText.value = "";
+	}
+};
 
 var photoList = {
 	init: function(){
