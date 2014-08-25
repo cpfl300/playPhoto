@@ -17,7 +17,9 @@
 	<script>
 		var can = document.querySelector('#can'); //전역
 		var textList = [];
-
+		var choosed = null;
+		var mousePointX = null;
+		var mousePointY = null;
 		// mouse event
 
 		can.addEventListener('mousedown', mouseDown);
@@ -25,23 +27,53 @@
 		can.addEventListener('mouseup', mouseUp);
 
 		function mouseDown(e){
-			console.log("x: "+e.clientX + " y: " + e.clientY);
-			console.log("x: "+e.pageX + " y: " + e.pageY);
+			mousePointX = e.clientX - can.offsetLeft;
+			mousePointY = e.clientY - can.offsetTop;
+
+			textList.forEach(function(el){
+				if(el.minX <= mousePointX && mousePointX <= el.maxX 
+					&& el.minY <= mousePointY && mousePointY <= el.maxY){
+					choosed = el;
+					return;
+				}
+			});
 		}
 
 		function mouseMove(e){
-			// console.log(e.pageY);
+			if(choosed == null){
+				return;
+			}
+
+			var xMove = e.clientX - mousePointX;
+			var yMove = e.clientY - mousePointY;
+			mousePointX = e.clientX;
+			mousePointY = e.clientY;
+			choosed.x += xMove;
+			choosed.minX += xMove;
+			choosed.maxX += xMove;
+			choosed.y += yMove;
+			choosed.minY += yMove;
+			choosed.maxY += yMove;
+			canvasRedraw();
 		}
 
 		function mouseUp(e){
-			// console.log(e.pageY);
+			choosed = null;
+			mousePointX = null;
+			mousePointY = null;
 		}
 
 		function drawText(text){
+			this.tmp = text;
+
 			this.x = 0;
-			this.y = 130;
+			this.y = 20 * 0.85;
 			this.ctx = can.getContext('2d');
-			this.ctx.font = "130px Arial";
+			this.ctx.font = "20px Arial";
+			this.minX = 0
+			this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
+			this.minY = 0;
+			this.maxY = this.minY + parseInt(this.ctx.font);
 			this.draw = function(){
 				this.ctx.fillText(text, this.x, this.y);	
 			}		
@@ -55,6 +87,7 @@
 			var text = new drawText(textValue);
 			text.draw();
 			textList.push(text);
+			document.querySelector('#textBox input').value = "";
 		}
 
 		function canvasRedraw(){
