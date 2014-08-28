@@ -128,9 +128,9 @@ input[type="checkbox"]{
 span{
 	position: absolute;
 	right: 0px;
-	margin: 0px 5px;
+	margin: -8px 5px;
 	color: red;
-	font-size: 18px;
+	font-size: 30px;
 }
 
 span:hover{
