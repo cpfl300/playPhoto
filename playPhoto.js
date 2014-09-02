@@ -244,12 +244,11 @@ OnePicture.Text = {
 		this.x = 0;
 		this.y = parseInt(fontSize) * 0.85;
 		this.ctx = canvas.getContext('2d');
+		this.ctx.font = fontSize+"px Arial";
 		this.minX = 0
 		this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
 		this.minY = 0;
 		this.maxY = this.minY + parseInt(fontSize);
-		// console.log(text+": "+this.ctx.measureText(text).width+", " + this.maxX);
-		// console.log(this.ctx);
 		this.draw = function(){
 			this.ctx.font = fontSize+"px Arial";
 			this.ctx.fillStyle = color;
