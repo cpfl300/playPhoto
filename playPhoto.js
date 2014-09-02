@@ -228,7 +228,6 @@ OnePicture.Text = {
 	},
 	canvasRedraw : function(){
 		if(Resource.ShareElement.textList.length == 0) return;
-		// resource.shareElement.textList[0].ctx.clearRect(0, 0, resource.shareElement.canvas.getAttribute('width'), resource.shareElement.canvas.getAttribute('height'));
 		Resource.ShareElement.textList[0].ctx.drawImage(Resource.ShareElement.latestImg, 0, 0, Resource.ShareElement.canvas.getAttribute('width'), Resource.ShareElement.canvas.getAttribute('height'));
 		Resource.ShareElement.textList.forEach(function(oneText){ 
 			oneText.draw();
@@ -241,25 +240,34 @@ OnePicture.Text = {
 		Resource.ShareElement.mousePointY = null;
 		cancelAnimationFrame(this.forDraw);
 	},
-	drawText: function(text){
+	drawText: function(text, color, fontSize){
 		this.x = 0;
-		this.y = 20 * 0.85;
+		this.y = parseInt(fontSize) * 0.85;
 		this.ctx = canvas.getContext('2d');
-		this.ctx.font = "20px Arial";
 		this.minX = 0
 		this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
 		this.minY = 0;
-		this.maxY = this.minY + parseInt(this.ctx.font);
+		this.maxY = this.minY + parseInt(fontSize);
+		// console.log(text+": "+this.ctx.measureText(text).width+", " + this.maxX);
+		// console.log(this.ctx);
 		this.draw = function(){
+			this.ctx.font = fontSize+"px Arial";
+			this.ctx.fillStyle = color;
 			this.ctx.fillText(text, this.x, this.y);	
 		}		
 	},
 	insertText : function(){
-		var elText = document.querySelector('#textBox input');
+		var elText = document.querySelector('#textBox input[type="text"]');
 		if(!elText.value){
 			return;
 		}
-		var text = new this.drawText(elText.value);
+
+		var textColor = document.querySelector('#textBox input[type="color"]').value;
+		var select = document.querySelector('#textBox select');
+		var fontSize = select.options[select.options.selectedIndex].value;
+
+		var text = new this.drawText(elText.value, textColor, fontSize);
+		
 		text.draw();
 		Resource.ShareElement.textList.push(text);
 		elText.value = "";
