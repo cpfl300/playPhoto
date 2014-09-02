@@ -249,6 +249,7 @@ OnePicture.Text = {
 		this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
 		this.minY = 0;
 		this.maxY = this.minY + parseInt(fontSize);
+		
 		this.draw = function(){
 			this.ctx.font = fontSize+"px Arial";
 			this.ctx.fillStyle = color;
