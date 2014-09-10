@@ -27,7 +27,7 @@ var makeSlideShow = {
 	findChecked : function(divs){
 		divs.map(function(div){
 			if(div.firstElementChild.checked){
-				this.checkedPicture.push(div.querySelector('canvas')); // canvas가 아니라 imgDATA를 넣으면 됨
+				this.checkedPicture.push(resource.shareElement.imageData[div.dataset.key]);
 			}
 		}.bind(this));
 

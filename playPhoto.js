@@ -9,6 +9,8 @@ var resource = {};
 resource.shareElement = {
 	textList: [],
 
+	imageData: {},
+
 	choosed: null,
 
 	mousePointX: null,
@@ -82,7 +84,8 @@ var userMedia = {
 				// 3rd param: errorCallback
 				function(err) {
 					console.log("The following error occured: " + err);
-				}
+					this.cameraOnOff(this.offBtn);
+				}.bind(this)
 			);
 	},
 
@@ -93,7 +96,9 @@ var userMedia = {
 	cameraOnOff: function(btn){
 		if(btn.textContent == "OFF"){
 			btn.textContent = "ON";
-			this.cameraOff();
+			if(this.stream){
+				this.cameraOff();
+			}
 		} else {
 			btn.textContent = "OFF";
 			this.cameraOn();
@@ -155,14 +160,23 @@ var onePicture = {
 		tempTag.click();
 	},
 	addList : function(){
-		this.makeCanvas();
+		var key = this.saveMetaData()
+		this.makeCanvas(key);
 		this.drawAtList();
 		this.addEventDel();
 	},
-	makeCanvas : function(){
+	makeCanvas : function(key){
 		var miniDiv = document.createElement('div');
+		miniDiv.setAttribute("data-key", key);
 		miniDiv.insertAdjacentHTML('afterbegin', resource.Templates.miniCanvas);
 		this.photoList.insertAdjacentElement('afterbegin', miniDiv);
+	},
+	saveMetaData : function(){
+		var img = new Image();
+		img.src = resource.shareElement.canvas.toDataURL('image/png');
+		var key = Date.now();
+		resource.shareElement.imageData[key] = img;
+		return key;
 	},
 	getMiniCHeight: function(canvas){
 		var miniCWith = parseInt(window.getComputedStyle(canvas).width);
@@ -170,6 +184,7 @@ var onePicture = {
 	},
 	drawAtList : function(){
 		var div = this.photoList.firstElementChild;
+		var key = div.dataset.key;
 		var miniCanvas = div.querySelector('canvas');
 
 		miniCanvas.style.height = this.getMiniCHeight(miniCanvas) +"px";
@@ -177,7 +192,7 @@ var onePicture = {
 		miniCanvas.width = parseInt(window.getComputedStyle(canvas).width);
 
 		var context = miniCanvas.getContext("2d");
-		context.drawImage(resource.shareElement.canvas, 0, 0, parseInt(window.getComputedStyle(canvas).width), this.getMiniCHeight(miniCanvas));
+		context.drawImage(resource.shareElement.imageData[key], 0, 0, parseInt(window.getComputedStyle(canvas).width), this.getMiniCHeight(miniCanvas));
 	},
 	addEventDel : function(){
 		var div = this.photoList.firstElementChild;
@@ -280,6 +295,7 @@ var photoList = {
 	},
 	delMiniCanvas : function(e){
 		var willDel = e.target.parentNode;
+		delete resource.shareElement.imageData[willDel.dataset.key];
 		willDel.parentNode.removeChild(willDel);
 	}
 }
