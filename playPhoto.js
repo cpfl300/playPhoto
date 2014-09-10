@@ -1,12 +1,12 @@
 window.addEventListener("load", function(){
-	Resource.ShareElement.setShareParam();
-	UserMedia.init();
-	OnePicture.init();
-	OnePicture.Text.init();
+	resource.shareElement.setShareParam();
+	userMedia.init();
+	onePicture.init();
+	onePicture.Text.init();
 });
 
-var Resource = {};
-Resource.ShareElement = {
+var resource = {};
+resource.shareElement = {
 	textList: [],
 
 	choosed: null,
@@ -26,23 +26,23 @@ Resource.ShareElement = {
 		this.videoHeight = parseInt(window.getComputedStyle(this.video).height);
 	}
 };
-Resource.URL = {
-	videoBasicResource : "http://www.w3schools.com/html/movie.mp4"
+resource.URL = {
+	videoBasicresource : "http://www.w3schools.com/html/movie.mp4"
 }
-Resource.Templates = {
+resource.Templates = {
 	miniCanvas : "<input type=\"checkbox\">"
 	+"<span>-</span>"
 	+"<canvas class=\"miniPhoto\"></canvas>"
 }
 
-var UserMedia = {
+var userMedia = {
 	init: function(){
 		this.setShareParam();
 		this.cameraOn();
 		this.offBtn.addEventListener('click', function(){
 			this.cameraOnOff(this.offBtn);
 		}.bind(this));
-		this.takePicture.addEventListener('click', OnePicture.draw.bind(OnePicture));
+		this.takePicture.addEventListener('click', onePicture.draw.bind(onePicture));
 	},
 
 	setShareParam: function(){
@@ -59,8 +59,8 @@ var UserMedia = {
 	cameraOn : function() {
 		this.setUserMedia();
 		if(!navigator.getUserMedia){
-			Resource.ShareElement.video.src = Resource.URL.videoBasicResource;
-			Resource.ShareElement.video.play();
+			resource.shareElement.video.src = resource.URL.videoBasicresource;
+			resource.shareElement.video.play();
 			return;
 		}
 
@@ -74,9 +74,9 @@ var UserMedia = {
 
 				// 2nd parma: successCallback
 				function(localMediaStream) {
-					Resource.ShareElement.video.src = window.URL.createObjectURL(localMediaStream);
-					Resource.ShareElement.video.play();
-					UserMedia.stream = localMediaStream;
+					resource.shareElement.video.src = window.URL.createObjectURL(localMediaStream);
+					resource.shareElement.video.play();
+					userMedia.stream = localMediaStream;
 				},
 
 				// 3rd param: errorCallback
@@ -102,7 +102,7 @@ var UserMedia = {
 
 };
 
-var OnePicture = {
+var onePicture = {
 	init : function(){
 		this.setShareParam();
 		this.openTextBox.addEventListener('click', function(){
@@ -124,17 +124,17 @@ var OnePicture = {
 			this.addPhoto.classList.remove("none");
 		}
 
-		context = Resource.ShareElement.canvas.getContext("2d");
-		Resource.ShareElement.setVideoTagSize();
+		context = resource.shareElement.canvas.getContext("2d");
+		resource.shareElement.setVideoTagSize();
 
-		Resource.ShareElement.canvas.width = Resource.ShareElement.videoWidth;
-		Resource.ShareElement.canvas.height = Resource.ShareElement.videoHeight;
-		context.drawImage(video, 0, 0, Resource.ShareElement.videoWidth, Resource.ShareElement.videoHeight);
+		resource.shareElement.canvas.width = resource.shareElement.videoWidth;
+		resource.shareElement.canvas.height = resource.shareElement.videoHeight;
+		context.drawImage(video, 0, 0, resource.shareElement.videoWidth, resource.shareElement.videoHeight);
 		
 		var img = new Image();
-		img.src = Resource.ShareElement.canvas.toDataURL('image/png');
-		Resource.ShareElement.latestImg = img;
-		Resource.ShareElement.textList.length = 0;
+		img.src = resource.shareElement.canvas.toDataURL('image/png');
+		resource.shareElement.latestImg = img;
+		resource.shareElement.textList.length = 0;
 	},
 	textBoxOnOff : function(btn){
 		var textBox = document.querySelector('#textBox');
@@ -148,7 +148,7 @@ var OnePicture = {
 		}
 	},
 	saveAPhoto : function(){
-		var dataURL = Resource.ShareElement.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+		var dataURL = resource.shareElement.canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
 		var tempTag = document.createElement('a');
 		tempTag.href = dataURL;
 		tempTag.download = "myPhoto.png";
@@ -161,12 +161,12 @@ var OnePicture = {
 	},
 	makeCanvas : function(){
 		var miniDiv = document.createElement('div');
-		miniDiv.insertAdjacentHTML('afterbegin', Resource.Templates.miniCanvas);
+		miniDiv.insertAdjacentHTML('afterbegin', resource.Templates.miniCanvas);
 		this.photoList.insertAdjacentElement('afterbegin', miniDiv);
 	},
 	getMiniCHeight: function(canvas){
 		var miniCWith = parseInt(window.getComputedStyle(canvas).width);
-		return miniCWith * Resource.ShareElement.videoHeight / Resource.ShareElement.videoWidth;
+		return miniCWith * resource.shareElement.videoHeight / resource.shareElement.videoWidth;
 	},
 	drawAtList : function(){
 		var div = this.photoList.firstElementChild;
@@ -177,31 +177,31 @@ var OnePicture = {
 		miniCanvas.width = parseInt(window.getComputedStyle(canvas).width);
 
 		var context = miniCanvas.getContext("2d");
-		context.drawImage(Resource.ShareElement.canvas, 0, 0, parseInt(window.getComputedStyle(canvas).width), this.getMiniCHeight(miniCanvas));
+		context.drawImage(resource.shareElement.canvas, 0, 0, parseInt(window.getComputedStyle(canvas).width), this.getMiniCHeight(miniCanvas));
 	},
 	addEventDel : function(){
 		var div = this.photoList.firstElementChild;
 		var delBtn = div.querySelector('span');
-		delBtn.addEventListener('click', PhotoList.delMiniCanvas);
+		delBtn.addEventListener('click', photoList.delMiniCanvas);
 	}
 }
 
-OnePicture.Text = {
+onePicture.Text = {
 	init : function(){
-		Resource.ShareElement.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
-		Resource.ShareElement.canvas.addEventListener('mousemove', this.mouseMove.bind(this));
-		Resource.ShareElement.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+		resource.shareElement.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
+		resource.shareElement.canvas.addEventListener('mousemove', this.mouseMove.bind(this));
+		resource.shareElement.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
 		var addTxt = document.querySelector('#addText');
 		addTxt.addEventListener('click', this.insertText.bind(this));
 	}, 
 	mouseDown : function(e){
-		Resource.ShareElement.mousePointX = e.clientX - Resource.ShareElement.canvas.offsetLeft;
-		Resource.ShareElement.mousePointY = e.clientY - Resource.ShareElement.canvas.offsetTop;
+		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
+		resource.shareElement.mousePointY = e.clientY - resource.shareElement.canvas.offsetTop;
 
-		Resource.ShareElement.textList.forEach(function(el){
-			if(el.minX <= Resource.ShareElement.mousePointX && Resource.ShareElement.mousePointX <= el.maxX 
-				&& el.minY <= Resource.ShareElement.mousePointY && Resource.ShareElement.mousePointY <= el.maxY){
-				Resource.ShareElement.choosed = el;
+		resource.shareElement.textList.forEach(function(el){
+			if(el.minX <= resource.shareElement.mousePointX && resource.shareElement.mousePointX <= el.maxX 
+				&& el.minY <= resource.shareElement.mousePointY && resource.shareElement.mousePointY <= el.maxY){
+				resource.shareElement.choosed = el;
 				return;
 			}
 		});
@@ -209,35 +209,35 @@ OnePicture.Text = {
 		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
 	},
 	mouseMove : function(e){
-		if(Resource.ShareElement.choosed == null){
+		if(resource.shareElement.choosed == null){
 			return;
 		}
-		var xMove = e.clientX - Resource.ShareElement.canvas.offsetLeft - Resource.ShareElement.mousePointX;
-		var yMove = e.clientY - Resource.ShareElement.canvas.offsetTop - Resource.ShareElement.mousePointY;
+		var xMove = e.clientX - resource.shareElement.canvas.offsetLeft - resource.shareElement.mousePointX;
+		var yMove = e.clientY - resource.shareElement.canvas.offsetTop - resource.shareElement.mousePointY;
 		this.renewalChoosed(xMove, yMove);
-		Resource.ShareElement.mousePointX = e.clientX - Resource.ShareElement.canvas.offsetLeft;
-		Resource.ShareElement.mousePointY = e.clientY - Resource.ShareElement.canvas.offsetTop;
+		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
+		resource.shareElement.mousePointY = e.clientY - resource.shareElement.canvas.offsetTop;
 	}, 
 	renewalChoosed : function(xM, yM){
-		Resource.ShareElement.choosed.x += xM;
-		Resource.ShareElement.choosed.minX += xM;
-		Resource.ShareElement.choosed.maxX += xM;
-		Resource.ShareElement.choosed.y += yM;
-		Resource.ShareElement.choosed.minY += yM;
-		Resource.ShareElement.choosed.maxY += yM;
+		resource.shareElement.choosed.x += xM;
+		resource.shareElement.choosed.minX += xM;
+		resource.shareElement.choosed.maxX += xM;
+		resource.shareElement.choosed.y += yM;
+		resource.shareElement.choosed.minY += yM;
+		resource.shareElement.choosed.maxY += yM;
 	},
 	canvasRedraw : function(){
-		if(Resource.ShareElement.textList.length == 0) return;
-		Resource.ShareElement.textList[0].ctx.drawImage(Resource.ShareElement.latestImg, 0, 0, Resource.ShareElement.canvas.getAttribute('width'), Resource.ShareElement.canvas.getAttribute('height'));
-		Resource.ShareElement.textList.forEach(function(oneText){ 
+		if(resource.shareElement.textList.length == 0) return;
+		resource.shareElement.textList[0].ctx.drawImage(resource.shareElement.latestImg, 0, 0, resource.shareElement.canvas.getAttribute('width'), resource.shareElement.canvas.getAttribute('height'));
+		resource.shareElement.textList.forEach(function(oneText){ 
 			oneText.draw();
 		});
 		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
 	},
 	mouseUp : function(e){
-		Resource.ShareElement.choosed = null;
-		Resource.ShareElement.mousePointX = null;
-		Resource.ShareElement.mousePointY = null;
+		resource.shareElement.choosed = null;
+		resource.shareElement.mousePointX = null;
+		resource.shareElement.mousePointY = null;
 		cancelAnimationFrame(this.forDraw);
 	},
 	drawText: function(text, color, fontSize){
@@ -269,17 +269,16 @@ OnePicture.Text = {
 		var text = new this.drawText(elText.value, textColor, fontSize);
 		
 		text.draw();
-		Resource.ShareElement.textList.push(text);
+		resource.shareElement.textList.push(text);
 		elText.value = "";
 	}
 };
 
-var PhotoList = {
+var photoList = {
 	init: function(){
 		//button event
 	},
 	delMiniCanvas : function(e){
-		debugger;
 		var willDel = e.target.parentNode;
 		willDel.parentNode.removeChild(willDel);
 	}

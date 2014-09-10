@@ -16,93 +16,188 @@
 			<button id="addText">AddText</button>
 		</div>
 	<script>
-		var canvas = document.querySelector('#can'); //전역
-		var textList = [];
-		var choosed = null;
-		var mousePointX = null;
-		var mousePointY = null;
-		// mouse event
+		// var canvas = document.querySelector('#can'); //전역
+		// var textList = [];
+		// var choosed = null;
+		// var mousePointX = null;
+		// var mousePointY = null;
+		// // mouse event
 
-		canvas.addEventListener('mousedown', mouseDown);
-		canvas.addEventListener('mousemove', mouseMove);
-		canvas.addEventListener('mouseup', mouseUp);
+		// canvas.addEventListener('mousedown', mouseDown);
+		// canvas.addEventListener('mousemove', mouseMove);
+		// canvas.addEventListener('mouseup', mouseUp);
 
-		function mouseDown(e){
-			mousePointX = e.clientX - canvas.offsetLeft;
-			mousePointY = e.clientY - canvas.offsetTop;
+		// function mouseDown(e){
+		// 	mousePointX = e.clientX - canvas.offsetLeft;
+		// 	mousePointY = e.clientY - canvas.offsetTop;
 
-			textList.forEach(function(el){
-				if(el.minX <= mousePointX && mousePointX <= el.maxX 
-					&& el.minY <= mousePointY && mousePointY <= el.maxY){
-					choosed = el;
-					return;
-				}
-			});
+		// 	textList.forEach(function(el){
+		// 		if(el.minX <= mousePointX && mousePointX <= el.maxX 
+		// 			&& el.minY <= mousePointY && mousePointY <= el.maxY){
+		// 			choosed = el;
+		// 			return;
+		// 		}
+		// 	});
 
-			test = requestAnimationFrame(canvasRedraw);
-		}
+		// 	test = requestAnimationFrame(canvasRedraw);
+		// }
 
-		function mouseMove(e){
-			if(choosed == null){
+		// function mouseMove(e){
+		// 	if(choosed == null){
+		// 		return;
+		// 	}
+
+		// 	var xMove = e.clientX - canvas.offsetLeft - mousePointX;
+		// 	var yMove = e.clientY - canvas.offsetTop - mousePointY;
+		// 	mousePointX = e.clientX - canvas.offsetLeft;
+		// 	mousePointY = e.clientY - canvas.offsetTop;
+
+		// 	choosed.x += xMove;
+		// 	choosed.minX += xMove;
+		// 	choosed.maxX += xMove;
+		// 	choosed.y += yMove;
+		// 	choosed.minY += yMove;
+		// 	choosed.maxY += yMove;
+		// 	// canvasRedraw();
+		// }
+
+		// function mouseUp(e){
+		// 	choosed = null;
+		// 	mousePointX = null;
+		// 	mousePointY = null;
+		// 	cancelAnimationFrame(test);
+		// }
+
+		// function drawText(text){
+		// 	this.tmp = text;
+
+		// 	this.x = 0;
+		// 	this.y = 20 * 0.85;
+		// 	this.ctx = canvas.getContext('2d');
+		// 	this.ctx.font = "20px Arial";
+		// 	this.minX = 0
+		// 	this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
+		// 	this.minY = 0;
+		// 	this.maxY = this.minY + parseInt(this.ctx.font);
+		// 	this.draw = function(){
+		// 		this.ctx.fillText(text, this.x, this.y);	
+		// 	}		
+		// }
+
+		// var addTxt = document.querySelector('#addText');
+		// addTxt.addEventListener('click', insertText);
+
+		// function insertText(){
+		// 	var textValue = document.querySelector('#textBox input').value;
+		// 	var text = new drawText(textValue);
+		// 	text.draw();
+		// 	textList.push(text);
+		// 	document.querySelector('#textBox input').value = "";
+		// }
+
+		// function canvasRedraw(){
+		// 	if(textList.length == 0) return;
+		// 	textList[0].ctx.clearRect(0, 0, canvas.getAttribute('width'), canvas.getAttribute('height'));
+		// 	textList.forEach(function(aText){ 
+		// 		aText.draw();
+		// 	});
+		// 	test = requestAnimationFrame(canvasRedraw);
+		// }
+CanvasText = {
+	setCanvas: function(canvas, inputbox, btn){
+		this.canvas = canvas;
+		this.addTxt = btn;
+		this.elText = inputbox;
+		this.init();
+	},
+	init : function(){
+		this.canvas.addEventListener('mousedown', this.mouseDown.bind(this));
+		this.canvas.addEventListener('mousemove', this.mouseMove.bind(this));
+		this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
+		this.addTxt.addEventListener('click', this.insertText.bind(this));
+	}, 
+	mousePointX : null,
+	mousePointY : null,
+	textList : [],
+	choosed : null,
+	mouseDown : function(e){
+		this.mousePointX = e.clientX - this.canvas.offsetLeft;
+		this.mousePointY = e.clientY - this.canvas.offsetTop;
+
+		this.textList.forEach(function(el){
+			if(el.minX <= this.mousePointX && this.mousePointX <= el.maxX 
+				&& el.minY <= this.mousePointY && this.mousePointY <= el.maxY){
+				this.choosed = el;
 				return;
 			}
+		}.bind(this));
 
-			var xMove = e.clientX - canvas.offsetLeft - mousePointX;
-			var yMove = e.clientY - canvas.offsetTop - mousePointY;
-			mousePointX = e.clientX - canvas.offsetLeft;
-			mousePointY = e.clientY - canvas.offsetTop;
-
-			choosed.x += xMove;
-			choosed.minX += xMove;
-			choosed.maxX += xMove;
-			choosed.y += yMove;
-			choosed.minY += yMove;
-			choosed.maxY += yMove;
-			// canvasRedraw();
+		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
+	},
+	mouseMove : function(e){
+		if(this.choosed == null){
+			return;
 		}
-
-		function mouseUp(e){
-			choosed = null;
-			mousePointX = null;
-			mousePointY = null;
-			cancelAnimationFrame(test);
+		var xMove = e.clientX - this.canvas.offsetLeft - this.mousePointX;
+		var yMove = e.clientY - this.canvas.offsetTop - this.mousePointY;
+		this.renewalChoosed(xMove, yMove);
+		this.mousePointX = e.clientX - this.canvas.offsetLeft;
+		this.mousePointY = e.clientY - this.canvas.offsetTop;
+	}, 
+	renewalChoosed : function(xM, yM){
+		this.choosed.x += xM;
+		this.choosed.minX += xM;
+		this.choosed.maxX += xM;
+		this.choosed.y += yM;
+		this.choosed.minY += yM;
+		this.choosed.maxY += yM;
+	},
+	canvasRedraw : function(){
+		if(this.textList.length == 0) return;
+		this.textList[0].ctx.clearRect(0, 0, parseInt(window.getComputedStyle(this.canvas).width), parseInt(window.getComputedStyle(this.canvas).height));
+		this.textList.forEach(function(oneText){ 
+			oneText.draw();
+		});
+		this.forDraw = requestAnimationFrame(this.canvasRedraw.bind(this));
+	},
+	mouseUp : function(e){
+		this.choosed = null;
+		this.mousePointX = null;
+		this.mousePointY = null;
+		cancelAnimationFrame(this.forDraw);
+	},
+	drawText: function(text){
+		this.x = 0;
+		this.y = 20 * 0.85;
+		this.ctx = CanvasText.canvas.getContext('2d');
+		this.ctx.font = "20px Arial";
+		this.minX = 0
+		this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
+		this.minY = 0;
+		this.maxY = this.minY + parseInt(this.ctx.font);
+		this.draw = function(){
+			this.ctx.fillText(text, this.x, this.y);
+		}		
+	},
+	insertText : function(){		
+		if(!this.elText.value){
+			return;
 		}
+		var text = new this.drawText(this.elText.value);
+		text.draw();
+		this.textList.push(text);
+		this.elText.value = "";
+	}
+};
 
-		function drawText(text){
-			this.tmp = text;
+var can = document.querySelector('#can');
+var input = document.querySelector('input');
+var btn = document.querySelector('button');
 
-			this.x = 0;
-			this.y = 20 * 0.85;
-			this.ctx = canvas.getContext('2d');
-			this.ctx.font = "20px Arial";
-			this.minX = 0
-			this.maxX = this.minX + parseInt(this.ctx.measureText(text).width);
-			this.minY = 0;
-			this.maxY = this.minY + parseInt(this.ctx.font);
-			this.draw = function(){
-				this.ctx.fillText(text, this.x, this.y);	
-			}		
-		}
+CanvasText.setCanvas(can, input, btn);
 
-		var addTxt = document.querySelector('#addText');
-		addTxt.addEventListener('click', insertText);
 
-		function insertText(){
-			var textValue = document.querySelector('#textBox input').value;
-			var text = new drawText(textValue);
-			text.draw();
-			textList.push(text);
-			document.querySelector('#textBox input').value = "";
-		}
 
-		function canvasRedraw(){
-			if(textList.length == 0) return;
-			textList[0].ctx.clearRect(0, 0, canvas.getAttribute('width'), canvas.getAttribute('height'));
-			textList.forEach(function(aText){ 
-				aText.draw();
-			});
-			test = requestAnimationFrame(canvasRedraw);
-		}
 
 	</script>
 	</body>
