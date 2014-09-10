@@ -110,7 +110,13 @@ input[type="color"]{
 }
 #barBtn button{
 	width: 40%;
-	margin: .5% 3%;
+	margin: .5% 0%;
+}
+#barBtn input{
+	width: 21px;
+	padding: 0px;
+	height: 28px;
+	text-align: center;
 }
 
 #photoList div{
