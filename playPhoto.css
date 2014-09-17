@@ -1,5 +1,7 @@
 body{
+	position: relative;
 	width: 100%;
+	height: 100%
 }
 #wrap{
 	min-width: 1200px;
@@ -34,6 +36,13 @@ body{
 	width: 40%;
 	margin: 8% 4.5%;
 	float: left;
+}
+
+h1{
+	text-align: center;
+	font-size: 37px;
+	font-family: cursive;
+	color: rgb(85, 29, 29);
 }
 
 /*cameraPart*/
@@ -98,6 +107,7 @@ input[type="color"]{
 #textBox{
 	margin-top: 30px;
 }
+
 /*right bar*/
 #photoList{
 	height: 550px;
@@ -122,6 +132,7 @@ input[type="color"]{
 #photoList div{
 	position: relative;
 }
+
 /*effect*/
 .none{
 	visibility: hidden;
@@ -146,4 +157,88 @@ span{
 
 span:hover{
 	cursor: pointer;
+}
+
+/*flip*/
+#album{
+	width: 360px;
+	height: 270px;
+	margin: 0 auto;
+}
+
+.imgContainer {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	1box-shadow: 0 12px 20px -10px rgba(81,64,49,0.6);
+}
+
+.forFlip{
+	z-index: 20;
+	width: 100%;
+	height: 100%;
+
+/*	-webkit-transition: transform 1000ms ease-in-out;
+	-moz-transition: transform 1000ms ease-in-out;
+	transition: transform 1000ms ease-in-out;*/
+}
+
+.nextCur{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+}
+
+.nextRotateBefore{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+	left: 50%;
+	z-index: 20;
+
+	-webkit-transition: transform 1000ms ease-in;
+	-moz-transition: transform 1000ms ease-in;
+	transition: transform 1000ms ease-in;
+
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.nextRotateBefore .imgContainer{
+	left: -100%;
+}
+
+.nextRotateEnd{
+	-webkit-transform: perspective(850) rotateY(-90deg);
+	-moz-transform: perspective(850) rotateY(-90deg);
+	transform: perspective(850) rotateY(-90deg);
+}
+
+.nextNextBefore{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+	z-index: 30;
+
+	-webkit-transition: transform 1000ms ease-out;
+	-moz-transition: transform 1000ms ease-out;
+	transition: transform 1000ms ease-out;
+
+	-webkit-transform: perspective(850) rotateY(90deg);
+	-moz-transform: perspective(850) rotateY(90deg);
+	transform: perspective(850) rotateY(90deg);
+
+	-webkit-transform-origin: right center;
+	-moz-transform-origin: right center;
+	transform-origin: right center;
+}
+
+.nextNextEnd{
+	-webkit-transform: perspective(0) rotateY(0deg);
+	-moz-transform: perspective(0) rotateY(0deg);
+	transform: perspective(0) rotateY(0deg);
 }
