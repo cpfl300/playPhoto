@@ -170,17 +170,12 @@ span:hover{
 	width: 100%;
 	height: 100%;
 	position: absolute;
-	1box-shadow: 0 12px 20px -10px rgba(81,64,49,0.6);
 }
 
 .forFlip{
 	z-index: 20;
 	width: 100%;
 	height: 100%;
-
-/*	-webkit-transition: transform 1000ms ease-in-out;
-	-moz-transition: transform 1000ms ease-in-out;
-	transition: transform 1000ms ease-in-out;*/
 }
 
 .nextCur{
@@ -207,7 +202,9 @@ span:hover{
 	transform-origin: left center;
 }
 
-.nextRotateBefore .imgContainer{
+.nextRotateBefore .imgContainer,
+.beforeCur .imgContainer,
+.beforeNextBefore .imgContainer{
 	left: -100%;
 }
 
@@ -241,4 +238,60 @@ span:hover{
 	-webkit-transform: perspective(0) rotateY(0deg);
 	-moz-transform: perspective(0) rotateY(0deg);
 	transform: perspective(0) rotateY(0deg);
+}
+
+.beforeCur{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+	left: 50%;
+}
+
+.beforeRotateBefore{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+	z-index: 20;
+
+	-webkit-transition: transform 1000ms ease-in;
+	-moz-transition: transform 1000ms ease-in;
+	transition: transform 1000ms ease-in;
+
+	-webkit-transform-origin: right center;
+	-moz-transform-origin: right center;
+	transform-origin: right center;
+}
+
+.beforeRotateEnd{
+	-webkit-transform: perspective(850) rotateY(90deg);
+	-moz-transform: perspective(850) rotateY(90deg);
+	transform: perspective(850) rotateY(90deg);
+}
+
+.beforeNextBefore{
+	position: absolute;
+	overflow: hidden;
+	width: 50%;
+	height: 360px;
+	z-index: 30;
+
+	-webkit-transition: transform 1000ms ease-out;
+	-moz-transition: transform 1000ms ease-out;
+	transition: transform 1000ms ease-out;
+
+	-webkit-transform: translateX(100%) perspective(850) rotateY(-90deg);
+	-moz-transform: translateX(100%) perspective(850) rotateY(-90deg);
+	transform: translateX(100%) perspective(850) rotateY(-90deg);
+
+	-webkit-transform-origin: left center;
+	-moz-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.beforeNextEnd{
+	-webkit-transform: translateX(100%) perspective(0) rotateY(0deg);
+	-moz-transform: translateX(100%) perspective(0) rotateY(0deg);
+	transform: translateX(100%) perspective(0) rotateY(0deg);
 }
