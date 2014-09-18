@@ -7,6 +7,7 @@ var flipbook = {
 	init: function(){
 		this.blur();
 		this.setPhotoes();
+		this.mouseDrag();
 	},
 	blur: function(){
 		var blur = document.createElement('div');
@@ -44,18 +45,26 @@ var flipbook = {
 
 		this.curPhoto = children[0];
 
-		// 이벤트 일단 받기!
-		var b = document.querySelector('#blur');
-		b.insertAdjacentHTML('beforeend', "<span id=\"temp\" style=\"top: 120px; margin-right: 20px;\">임시NEXT버튼</span>" 
-			+ "<br> <span id=\"temp2\" style=\"top: 160px; margin-right: 20px;\">임시BEFORE버튼</span>");
-		var t = document.querySelector('#temp');
-		t.addEventListener('click', this._flip.bind(this,"next"));
-		document.querySelector('#temp2').addEventListener('click', this._flip.bind(this, "before"));
-
 	},
+	mouseDrag: function(){
+		var album = document.querySelector('#album');
+		album.addEventListener('mousedown', function(e){
+			e.target.draggable = false;
+			this.curXPoint = e.x;
+		}.bind(this));
 
+		album.addEventListener('mouseup', function(e){
+			if(Math.abs(this.curXPoint - e.x) < 100){
+				return;
+			}
+			if(this.curXPoint > e.x){
+				this._flip("next");
+			}else{
+				this._flip("before");
+			}
+		}.bind(this));
+	},
 	_flip: function(temp){
-		//일단 next구현 이벤트가 next인지 before인지 구분
 		var dir;
 		if(temp=="next"){
 			dir = {
@@ -72,8 +81,7 @@ var flipbook = {
 				nextClass: "forFlip beforeNextBefore"
 			};
 		}
-		
-		// this._move(next);
+
 		this._attachNode(dir);
 	},
 	_move: function(direction){
@@ -110,23 +118,19 @@ var flipbook = {
 		nextP.style.display = "block";
 		nextP.appendChild(direction.targetNode.firstElementChild.cloneNode());
 
-		// 1. curP 왼쪽 복사
 		var curLeft = document.createElement('div');
 		curLeft.className = direction.curClass;
 		curLeft.appendChild(curP);
 		album.insertAdjacentElement('afterbegin', curLeft);
 
-		// 2. curP 오른쪽 복사
 		var curRight = document.createElement('div');
 		curRight.className = direction.curRotateClass;
 		curRight.appendChild(curP2);
 		album.insertAdjacentElement('afterbegin', curRight);
 
-		// 3. nextP display block
 		this.curPhoto.style.display = "none";
 		direction.targetNode.style.display = "block";
 
-		// 4. nextP 왼쪽 복사, left가 0이었다니... 90 -> 0deg center right기준
 		var nextLeft = document.createElement('div');
 		nextLeft.className = direction.nextClass;
 		nextLeft.appendChild(nextP);
@@ -136,6 +140,6 @@ var flipbook = {
 			firstRotate: direction.curRotateClass.split(" ")[1],
 			secondRotate: direction.nextClass.split(" ")[1],
 			next: direction.targetNode
-		}); //next로 move하는것에 대해 인자를 넘김
+		});
 	}
 };
