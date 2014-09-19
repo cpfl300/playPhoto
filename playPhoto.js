@@ -3,6 +3,7 @@ window.addEventListener("load", function(){
 	userMedia.init();
 	onePicture.init();
 	onePicture.Text.init();
+	photoList.init();
 });
 
 var resource = {};
@@ -125,6 +126,10 @@ var onePicture = {
 		this.photoList = document.querySelector('#photoList');
 	},
 	draw : function(){
+		if(document.querySelector('video').src == ""){
+			return;
+		}
+
 		if(this.addPhoto.classList.contains("none")){
 			this.addPhoto.classList.remove("none");
 		}
@@ -208,6 +213,10 @@ onePicture.Text = {
 		resource.shareElement.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
 		var addTxt = document.querySelector('#addText');
 		addTxt.addEventListener('click', this.insertText.bind(this));
+
+		var textBox = document.querySelector('#textBox input[type="text"]');
+		var btn = document.querySelector('#addText');
+		this._pushBtnByEnter(textBox, btn);
 	}, 
 	mouseDown : function(e){
 		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
@@ -286,12 +295,29 @@ onePicture.Text = {
 		text.draw();
 		resource.shareElement.textList.push(text);
 		elText.value = "";
+	}, 
+	_pushBtnByEnter: function(inputTxt, btn){
+		inputTxt.addEventListener('keydown', function(e){
+			if(e.keyCode == 13){
+				btn.click();
+			}
+		});
 	}
 };
 
 var photoList = {
 	init: function(){
-		//button event
+		document.querySelector('#photoList').addEventListener('click', this._selected);
+	},
+	_selected: function(e){
+		if((e.target.tagName).toUpperCase() == "CANVAS"){
+			if(e.target.parentNode.firstElementChild.checked == true){
+				e.target.parentNode.firstElementChild.checked = false;
+			}else{
+				e.target.parentNode.firstElementChild.checked = true;
+			}
+			
+		}
 	},
 	delMiniCanvas : function(e){
 		var willDel = e.target.parentNode;

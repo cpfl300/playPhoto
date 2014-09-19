@@ -5,19 +5,15 @@ window.onload = function(){
 
 var flipbook = {
 	init: function(){
-		this.blur();
 		this.setPhotoes();
-		this.mouseDrag();
 	},
 	blur: function(){
 		var blur = document.createElement('div');
-		blur.id="blur";
-		blur.style.cssText="width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); position:absolute; z-index:3; text-align: center;"
+		blur.id = "blur";
 		blur.insertAdjacentHTML('afterbegin', "<span style=\"margin-top: 10px; margin-right: 20px;\">X</sapn>");
 		blur.firstElementChild.addEventListener('click', function(){
-			var p = blur.parentNode;
-			p.removeChild(blur);
-		})
+			this._nodeRemove(blur);
+		}.bind(this))
 		document.querySelector('#wrap').insertAdjacentElement('beforebegin', blur);
 	},
 	setPhotoes: function(){
@@ -35,7 +31,11 @@ var flipbook = {
 				album.insertAdjacentElement('afterbegin', container);
 			}
 		});		
-		
+		if(album.childElementCount == 0){
+			alert("선택된 사진이 없습니다.");
+			return;
+		}
+		this.blur();
 		document.querySelector('#blur').appendChild(album);
 
 		var children = document.querySelector('#album').children;
@@ -44,7 +44,7 @@ var flipbook = {
 		}
 
 		this.curPhoto = children[0];
-
+		this.mouseDrag();
 	},
 	mouseDrag: function(){
 		var album = document.querySelector('#album');
@@ -54,7 +54,7 @@ var flipbook = {
 		}.bind(this));
 
 		album.addEventListener('mouseup', function(e){
-			if(Math.abs(this.curXPoint - e.x) < 100){
+			if(Math.abs(this.curXPoint - e.x) < 80){
 				return;
 			}
 			if(this.curXPoint > e.x){
@@ -64,9 +64,22 @@ var flipbook = {
 			}
 		}.bind(this));
 	},
+	_nodeRemove: function(node){
+		var p = node.parentNode;
+		p.removeChild(node);
+	},
 	_flip: function(temp){
 		var dir;
+		var album =  flipbook.curPhoto.parentNode;
 		if(temp=="next"){
+			if(this.curPhoto.nextElementSibling == null){
+				album.insertAdjacentHTML('afterend', '<h2>다음 사진이 없습니다</h2>');
+				setTimeout(function(){
+					this._nodeRemove(document.querySelector('h2'));
+				}.bind(this), 400);
+				return;
+			}
+
 			dir = {
 				targetNode: this.curPhoto.nextElementSibling,
 				curClass: "forFlip nextCur",
@@ -74,6 +87,14 @@ var flipbook = {
 				nextClass: "forFlip nextNextBefore"
 			};
 		} else {
+			if(this.curPhoto.previousElementSibling == null){
+				album.insertAdjacentHTML('afterend', '<h2>이전 사진이 없습니다</h2>');
+				setTimeout(function(){
+					this._nodeRemove(document.querySelector('h2'));
+				}.bind(this), 400);
+				return;
+			}
+
 			dir = {
 				targetNode: this.curPhoto.previousElementSibling,
 				curClass: "forFlip beforeCur",
@@ -96,12 +117,11 @@ var flipbook = {
 
 			rotateSecond.addEventListener('transitionend', function(){
 				var forFlip = document.querySelectorAll('.forFlip');
-				var p = forFlip[0].parentNode;
 				for(var i=0; i< forFlip.length; i++){
-					p.removeChild(forFlip[i]);
+					this._nodeRemove(forFlip[i]);
 				}
-			})
-		})
+			}.bind(this))
+		}.bind(this))
 	
 		this.curPhoto = direction.next;
 	},
@@ -143,3 +163,18 @@ var flipbook = {
 		});
 	}
 };
+
+
+window.onload = function(){
+	var textBox = document.querySelector('#textBox input[type="text"]');
+	var btn = document.querySelector('#addText');
+	pushBtnByEnter(textBox, btn);
+}
+
+function pushBtnByEnter(inputTxt, btn){
+	inputTxt.addEventListener('keydown', function(e){
+		if(e.keyCode == 13){
+			btn.click();
+		}
+	});
+}
