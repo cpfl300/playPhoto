@@ -1,8 +1,3 @@
-window.addEventListener('load', function(){
-	makeSlideShow.init();
-})
-
-
 var makeSlideShow = {
 	init : function(){
 		var btn = document.querySelector('#slideShow');

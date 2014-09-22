@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Unit Test Basic</title>
+  <link rel="stylesheet" href="lib/qunit-1.14.0.css">
+</head>
+<body>
+
+
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+
+  	<section id="wrap">
+		<section id="left">
+			<section id="logo">
+				<h1 style="text-align: center;">Play Photo!</h1>
+			</section>
+			<section id="content">
+				<div id="cameraPart">
+					<video id="video" autoplay="" src="blob:http%3A//127.0.0.1/03441fd4-ee32-4ddc-b131-9408764f9c88"></video>
+					<div id="cameraBtn">
+						<button id="cameraOff">OFF</button>
+						<button id="cameraTakePicture">TakePicture</button>
+						<button id="saveSS" class="">SaveSlideShow</button>
+					</div>
+				</div>
+				<div id="canvasPart">
+					<canvas id="canvas" width="360" height="270"></canvas>
+					<div id="canvasBtn">
+						<button id="openTextBox">CloseTextBox</button>
+						<button id="savePhoto">SavePhoto</button>
+						<button id="addPhoto" class="">AddPhoto</button>
+					</div>
+					<div id="textBox" class="">
+						<input type="color">
+						<select name="size">
+							<option value="15">small</option>
+							<option value="20" selected="selected">normal</option>
+							<option value="25">big</option>
+							<option value="30">biger</option>
+						</select>
+						<input type="text">
+						<button id="addText">AddText</button>
+					</div>
+				</div>
+			</section>
+		</section>
+
+		<section id="right">
+			<div id="photoList"><div data-key="1411318179350"><input type="checkbox"><span>-</span><canvas class="miniPhoto" height="167" width="360" style="height: 167.25px;"></canvas></div><div data-key="1411318165332"><input type="checkbox"><span>-</span><canvas class="miniPhoto" height="167" width="360" style="height: 167.25px;"></canvas></div><div data-key="1411317916477"><input type="checkbox"><span>-</span><canvas class="miniPhoto" height="167" width="360" style="height: 167.25px;"></canvas></div>
+			</div>
+			<div id="barBtn">
+				<input type="text" value="1">
+				<button id="slideShow">MakeSlideShow</button>
+				<button id="flipBook">MakeFlipBook</button>
+			</div>
+		</section>
+	</section>
+
+  </div>
+
+  <script src="lib/qunit-1.14.0.js"></script>
+  <script src="../playPhoto.js"></script>
+  <script src="../makeSlideShow.js"></script>
+  <script src="../flipBook.js"></script>
+  <script src="textNflipTest.js"></script>
+
+</body>
+</html>

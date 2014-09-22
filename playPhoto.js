@@ -215,8 +215,7 @@ onePicture.Text = {
 		addTxt.addEventListener('click', this.insertText.bind(this));
 
 		var textBox = document.querySelector('#textBox input[type="text"]');
-		var btn = document.querySelector('#addText');
-		this._pushBtnByEnter(textBox, btn);
+		this._pushBtnByEnter(textBox, addTxt);
 	}, 
 	mouseDown : function(e){
 		resource.shareElement.mousePointX = e.clientX - resource.shareElement.canvas.offsetLeft;
@@ -308,6 +307,24 @@ onePicture.Text = {
 var photoList = {
 	init: function(){
 		document.querySelector('#photoList').addEventListener('click', this._selected);
+		document.querySelector('#flipBook').addEventListener('click', this._callFlipbook);
+		makeSlideShow.init();
+	},
+	_callFlipbook: function(){
+		var selectedImg = [];
+		var mPhoto = Array.prototype.slice.call(document.querySelectorAll('#photoList div'));
+		mPhoto.map(function(div){
+			if(div.firstElementChild.checked){
+				selectedImg.push(resource.shareElement.imageData[div.dataset.key]);
+			}
+		});
+
+		if(selectedImg.length == 0){
+			alert("선택된 사진이 없습니다.");
+			return;
+		}
+
+		flipbook.init.call(flipbook, selectedImg);
 	},
 	_selected: function(e){
 		if((e.target.tagName).toUpperCase() == "CANVAS"){

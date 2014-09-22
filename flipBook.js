@@ -1,40 +1,23 @@
-window.onload = function(){
-	document.querySelector('#flipBook').addEventListener('click', flipbook.init.bind(flipbook));
-}
-
+/*
+* 사용방법
+* flipbook.init.call(flipbook, selectedImg);
+* 첫번째 인자: flipbook
+* 두번째 인자: list(imgURLData가 인자로 들어있다)
+*
+*/
 
 var flipbook = {
-	init: function(){
+	init: function(imgData){
+		this.imgData = imgData;
 		this.setPhotoes();
-	},
-	blur: function(){
-		var blur = document.createElement('div');
-		blur.id = "blur";
-		blur.insertAdjacentHTML('afterbegin', "<span style=\"margin-top: 10px; margin-right: 20px;\">X</sapn>");
-		blur.firstElementChild.addEventListener('click', function(){
-			this._nodeRemove(blur);
-		}.bind(this))
-		document.querySelector('#wrap').insertAdjacentElement('beforebegin', blur);
+		this.flag = true;
 	},
 	setPhotoes: function(){
 		var album = document.createElement('div');
 		album.id="album";
 		album.style.cssText="position: relative; top: 25%;";
 
-		var mPhoto = Array.prototype.slice.call(document.querySelectorAll('#photoList div'));
-
-		mPhoto.map(function(div){
-			if(div.firstElementChild.checked){
-				var container = document.createElement('div');
-				container.classList.add("imgContainer");
-				container.appendChild(resource.shareElement.imageData[div.dataset.key]);
-				album.insertAdjacentElement('afterbegin', container);
-			}
-		});		
-		if(album.childElementCount == 0){
-			alert("선택된 사진이 없습니다.");
-			return;
-		}
+		this.setImgData(album);
 		this.blur();
 		document.querySelector('#blur').appendChild(album);
 
@@ -45,6 +28,23 @@ var flipbook = {
 
 		this.curPhoto = children[0];
 		this.mouseDrag();
+	},
+	setImgData: function(album){
+		this.imgData.map(function(img){
+			var container = document.createElement('div');
+			container.classList.add("imgContainer");
+			container.appendChild(img);
+			album.insertAdjacentElement('afterbegin', container);
+		});
+	},
+	blur: function(){
+		var blur = document.createElement('div');
+		blur.id = "blur";
+		blur.insertAdjacentHTML('afterbegin', "<span style=\"margin-top: 5%; margin-right: 10%; color:white\">X</sapn>");
+		blur.firstElementChild.addEventListener('click', function(){
+			this._nodeRemove(blur);
+		}.bind(this))
+		document.querySelector('#wrap').insertAdjacentElement('beforebegin', blur);
 	},
 	mouseDrag: function(){
 		var album = document.querySelector('#album');
@@ -69,6 +69,11 @@ var flipbook = {
 		p.removeChild(node);
 	},
 	_flip: function(temp){
+		console.log(this.flag)
+		if(this.flag == false) return;
+
+		this.flag = false;
+
 		var dir;
 		var album =  flipbook.curPhoto.parentNode;
 		if(temp=="next"){
@@ -77,6 +82,7 @@ var flipbook = {
 				setTimeout(function(){
 					this._nodeRemove(document.querySelector('h2'));
 				}.bind(this), 400);
+				this.flag = true;
 				return;
 			}
 
@@ -92,6 +98,7 @@ var flipbook = {
 				setTimeout(function(){
 					this._nodeRemove(document.querySelector('h2'));
 				}.bind(this), 400);
+				this.flag = true;
 				return;
 			}
 
@@ -106,6 +113,7 @@ var flipbook = {
 		this._attachNode(dir);
 	},
 	_move: function(direction){
+		
 		var rotateFirst = document.querySelector('.' + direction.firstRotate);
 		rotateFirst.offsetHeight;
 
@@ -120,6 +128,7 @@ var flipbook = {
 				for(var i=0; i< forFlip.length; i++){
 					this._nodeRemove(forFlip[i]);
 				}
+				this.flag = true;
 			}.bind(this))
 		}.bind(this))
 	
@@ -164,17 +173,3 @@ var flipbook = {
 	}
 };
 
-
-window.onload = function(){
-	var textBox = document.querySelector('#textBox input[type="text"]');
-	var btn = document.querySelector('#addText');
-	pushBtnByEnter(textBox, btn);
-}
-
-function pushBtnByEnter(inputTxt, btn){
-	inputTxt.addEventListener('keydown', function(e){
-		if(e.keyCode == 13){
-			btn.click();
-		}
-	});
-}
