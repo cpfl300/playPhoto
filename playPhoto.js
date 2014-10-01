@@ -45,7 +45,12 @@ var userMedia = {
 		this.offBtn.addEventListener('click', function(){
 			this.cameraOnOff(this.offBtn);
 		}.bind(this));
-		this.takePicture.addEventListener('click', onePicture.draw.bind(onePicture));
+		// this.takePicture.addEventListener('click', onePicture.draw.bind(onePicture));
+
+		this.takePicture.addEventListener('click', function(){
+			onePicture.draw.call(onePicture);
+			onePicture.addList.call(onePicture);
+		});
 	},
 
 	setShareParam: function(){

@@ -48,12 +48,17 @@ var flipbook = {
 	},
 	mouseDrag: function(){
 		var album = document.querySelector('#album');
+		var flag = false;
+		var blur = document.querySelector('#blur');
 		album.addEventListener('mousedown', function(e){
+			flag = true;
 			e.target.draggable = false;
 			this.curXPoint = e.x;
 		}.bind(this));
 
-		album.addEventListener('mouseup', function(e){
+
+		blur.addEventListener('mouseup', function(e){
+			if(flag==false) return;
 			if(Math.abs(this.curXPoint - e.x) < 80){
 				return;
 			}
@@ -62,6 +67,7 @@ var flipbook = {
 			}else{
 				this._flip("before");
 			}
+			flag = false;
 		}.bind(this));
 	},
 	_nodeRemove: function(node){
