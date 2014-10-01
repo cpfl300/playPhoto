@@ -26,6 +26,8 @@ var flipbook = {
 			children[i].style.display = "none";
 		}
 
+		album.insertAdjacentHTML('beforeend', '<h3>drag로 사진을 넘기세요 :)</h3>');
+
 		this.curPhoto = children[0];
 		this.mouseDrag();
 	},

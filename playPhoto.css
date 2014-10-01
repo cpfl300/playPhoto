@@ -188,6 +188,13 @@ span:hover{
 	cursor: pointer;
 }
 
+h3{
+	margin-top: 100px;
+	position: fixed;
+	color: white;
+	font-size: 23px;
+}
+
 /*flip*/
 #album{
 	width: 360px;
