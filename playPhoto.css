@@ -69,6 +69,8 @@ h2{
 	text-align: center;
 	top: 0px;
 	left: 0px;
+	min-width: 710px;
+	min-height: 580px;
 }
 
 /*cameraPart*/
@@ -193,6 +195,7 @@ h3{
 	position: fixed;
 	color: white;
 	font-size: 23px;
+	left: 200px;
 }
 
 /*flip*/

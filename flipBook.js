@@ -26,8 +26,6 @@ var flipbook = {
 			children[i].style.display = "none";
 		}
 
-		album.insertAdjacentHTML('beforeend', '<h3>drag로 사진을 넘기세요 :)</h3>');
-
 		this.curPhoto = children[0];
 		this.mouseDrag();
 	},
@@ -42,6 +40,7 @@ var flipbook = {
 	blur: function(){
 		var blur = document.createElement('div');
 		blur.id = "blur";
+		blur.insertAdjacentHTML('beforeend', '<h3>drag로 사진을 넘기세요 :)</h3>');
 		blur.insertAdjacentHTML('afterbegin', "<span style=\"margin-top: 5%; margin-right: 10%; color:white\">X</sapn>");
 		blur.firstElementChild.addEventListener('click', function(){
 			this._nodeRemove(blur);
