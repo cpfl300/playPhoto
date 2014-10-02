@@ -18,7 +18,8 @@ var flipbook = {
 		album.style.cssText="position: relative; top: 25%;";
 
 		this.setImgData(album);
-		this.blur();
+		var msg = '<h3>drag로 사진을 넘기세요 :)</h3>';
+		this.blur(msg);
 		document.querySelector('#blur').appendChild(album);
 
 		var children = document.querySelector('#album').children;
@@ -37,10 +38,10 @@ var flipbook = {
 			album.insertAdjacentElement('afterbegin', container);
 		});
 	},
-	blur: function(){
+	blur: function(msg){
 		var blur = document.createElement('div');
 		blur.id = "blur";
-		blur.insertAdjacentHTML('beforeend', '<h3>drag로 사진을 넘기세요 :)</h3>');
+		blur.insertAdjacentHTML('beforeend', msg);
 		blur.insertAdjacentHTML('afterbegin', "<span style=\"margin-top: 5%; margin-right: 10%; color:white\">X</sapn>");
 		blur.firstElementChild.addEventListener('click', function(){
 			this._nodeRemove(blur);

@@ -72,15 +72,23 @@ var makeSlideShow = {
 	},
 	showSlideShowOnWindow : function(){
 		this.checkedPicture.length = 0;
-		resource.shareElement.video.src = this.URL;
 		
-		resource.shareElement.video.onended = function(){
-			resource.shareElement.video.src = this.URL;
+		var msg = '<h3>slideShow :)</h3>';
+		flipbook.blur(msg);
+
+		var show = document.createElement('video');
+		show.id="show";
+		show.style.cssText="position: relative; top: 25%;";
+		document.querySelector('#blur').appendChild(show);
+
+		var showVideo = document.querySelector('#show');
+		showVideo.autoplay = true;
+
+		showVideo.src = this.URL;
+		
+		showVideo.onended = function(){
+			showVideo.src = this.URL;
 		}.bind(this);
-		if(document.querySelector('#cameraOff').textContent == "OFF"){
-			userMedia.cameraOff();
-			userMedia.cameraOnOff(document.querySelector('#cameraOff'));
-		}
 	}
 
 };
