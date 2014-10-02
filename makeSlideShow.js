@@ -2,7 +2,7 @@ var makeSlideShow = {
 	init : function(){
 		var btn = document.querySelector('#slideShow');
 		btn.addEventListener('click', this.makeSlide.bind(this));
-		document.querySelector('#saveSS').addEventListener('click', this.saveAtFile.bind(this));
+		// document.querySelector('#saveSS').addEventListener('click', this.saveAtFile.bind(this));
 		this.checkedPicture = [];
 	},
 	makeSlide : function(){
@@ -67,14 +67,15 @@ var makeSlideShow = {
 		var result = vid.compile();
 		var url = webkitURL.createObjectURL(result);
 		this.URL = url;
-		document.querySelector('#saveSS').classList.remove('none');
+		// document.querySelector('#saveSS').classList.remove('none');
 		return true;
 	},
 	showSlideShowOnWindow : function(){
 		this.checkedPicture.length = 0;
 		
-		var msg = '<h3>slideShow :)</h3>';
+		var msg = '<h3>slideShow :)<button id="saveSS" class="">SaveSlideShow</button></h3> ';
 		flipbook.blur(msg);
+		document.querySelector('#saveSS').addEventListener('click', this.saveAtFile.bind(this));
 
 		var show = document.createElement('video');
 		show.id="show";
